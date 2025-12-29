@@ -1,0 +1,4 @@
+# Python dependencies for Nest Video Downloader
+# Note: Actual implementation will require specific Nest API libraries
+# This is a placeholder for initial setup
+requests>=2.31.0

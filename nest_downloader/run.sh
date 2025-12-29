@@ -11,7 +11,13 @@ NEST_EMAIL=$(bashio::config 'nest_email')
 NEST_PASSWORD=$(bashio::config 'nest_password')
 DOWNLOAD_PATH=$(bashio::config 'download_path')
 
-bashio::log.info "Configuration loaded"
+# Validate credentials are provided
+if [[ -z "${NEST_EMAIL}" ]] || [[ -z "${NEST_PASSWORD}" ]]; then
+    bashio::log.error "Nest email and password must be configured"
+    bashio::exit.nok "Missing required configuration"
+fi
+
+bashio::log.info "Configuration loaded successfully"
 bashio::log.info "Download path: ${DOWNLOAD_PATH}"
 
 # Create download directory if it doesn't exist
