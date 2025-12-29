@@ -1,0 +1,21 @@
+name: Nest Video Downloader
+version: "0.1.0"
+slug: nest_downloader
+description: Download videos from Nest cameras
+url: https://github.com/gabrielgbim/ha-addons/tree/main/nest_downloader
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+init: false
+options:
+  nest_email: ""
+  nest_password: ""
+  download_path: "/share/nest_videos"
+schema:
+  nest_email: str
+  nest_password: password
+  download_path: str
+image: ghcr.io/gabrielgbim/nest-downloader-{arch}
