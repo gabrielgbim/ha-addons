@@ -25,7 +25,13 @@ mkdir -p "${DOWNLOAD_PATH}"
 
 bashio::log.info "Nest Video Downloader is ready"
 
-# Keep the container running
+# TODO: Implement actual Nest API integration
+# This should include:
+# - Authentication with Nest API using provided credentials
+# - Discovery of connected cameras
+# - Periodic checking for new videos
+# - Downloading videos to the specified path
+# Currently placeholder code to keep container running
 while true; do
     sleep 3600
 done
