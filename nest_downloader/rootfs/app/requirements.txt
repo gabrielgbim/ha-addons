@@ -1,6 +1,4 @@
-# Python dependencies for Nest Video Downloader
-requests>=2.31.0
-pydantic>=2.0.0
-glocaltokens>=0.7.0
-pytz>=2023.0
-isodate>=0.6.0
+requests>=2.32.5
+glocaltokens>=0.7.6
+pytz>=2025.2
+isodate>=0.7.2

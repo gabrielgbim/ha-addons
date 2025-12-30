@@ -3,24 +3,18 @@
 Data models for Nest video events
 """
 
-import logging
 import datetime
-from pydantic import BaseModel
 import isodate
 
-logger = logging.getLogger(__name__)
 
-
-class CameraEvent(BaseModel):
+class CameraEvent:
     """Represents a Nest camera event with start time and duration"""
     
-    device_id: str
-    device_name: str
-    start_time: datetime.datetime
-    duration: datetime.timedelta
-    
-    class Config:
-        arbitrary_types_allowed = True
+    def __init__(self, device_id: str, device_name: str, start_time: datetime.datetime, duration: datetime.timedelta):
+        self.device_id = device_id
+        self.device_name = device_name
+        self.start_time = start_time
+        self.duration = duration
     
     @property
     def end_time(self):
