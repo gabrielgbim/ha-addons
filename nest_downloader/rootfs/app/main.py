@@ -28,14 +28,6 @@ class Config:
         self.google_master_token = os.getenv('GOOGLE_MASTER_TOKEN')
         self.local_timezone = os.getenv('LOCAL_TIMEZONE', 'America/New_York')
         self.refresh_interval = int(os.getenv('REFRESH_INTERVAL', 60))
-        
-        # Validate required configuration
-        if not self.base_path:
-            raise ValueError("BASE_PATH is required")
-        if not self.google_username:
-            raise ValueError("GOOGLE_USERNAME is required")
-        if not self.google_master_token:
-            raise ValueError("GOOGLE_MASTER_TOKEN is required")
     
     def display(self):
         """Display configuration (without sensitive data)"""
@@ -79,7 +71,6 @@ class NestDownloader:
             logger.info(f"Found {len(self.devices)} Nest device(s)")
         
         # Initialize video downloader
-        self.VideoDownloaderClass = VideoDownloader
         self.downloader = VideoDownloader(
             base_path=config.base_path,
             local_timezone=config.local_timezone

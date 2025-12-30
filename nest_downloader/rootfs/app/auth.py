@@ -25,15 +25,7 @@ class GLocalAuthenticationTokensMultiService(glocaltokens.client.GLocalAuthentic
             or self._has_expired(self.access_token_date, glocaltokens.client.ACCESS_TOKEN_DURATION)
             or self._last_access_token_service != service
         ):
-            logger.debug("Getting new access token...")
             master_token = self.get_master_token()
-            if master_token is None:
-                logger.error("Unable to obtain master token")
-                return None
-            if self.username is None:
-                logger.error("Username is not set")
-                return None
-            
             res = glocaltokens.client.perform_oauth(
                 self._escape_username(self.username),
                 master_token,
@@ -42,12 +34,6 @@ class GLocalAuthenticationTokensMultiService(glocaltokens.client.GLocalAuthentic
                 service=service,
                 client_sig=glocaltokens.client.ACCESS_TOKEN_CLIENT_SIGNATURE,
             )
-            
-            if "Auth" not in res:
-                logger.error("Could not get access token")
-                logger.debug(f"Request response: {res}")
-                return None
-            
             self.access_token = res["Auth"]
             self.access_token_date = datetime.datetime.now()
             self._last_access_token_service = service
@@ -66,33 +52,21 @@ class GoogleAuthenticator:
             master_token=master_token,
             password="FAKE_PASSWORD"
         )
-        logger.info(f"Initialized Google authenticator for {username}")
     
     def get_nest_access_token(self):
         """Get access token for Nest API"""
-        access_token = self._auth.get_access_token(service=self.NEST_SCOPE)
-        if not access_token:
-            raise Exception("Couldn't get a Nest access token")
-        return access_token
+        return self._auth.get_access_token(service=self.NEST_SCOPE)
     
     def get_nest_devices(self):
         """Get list of Nest camera devices from homegraph"""
-        try:
-            homegraph_response = self._auth.get_homegraph()
-            devices = []
-            
-            for device in homegraph_response.home.devices:
-                # Look for devices with camera streaming and Nest model
-                if ("action.devices.traits.CameraStream" in device.traits and 
-                    "Nest" in device.hardware.model):
-                    device_info = {
-                        'id': device.device_info.agent_info.unique_id,
-                        'name': device.device_name
-                    }
-                    devices.append(device_info)
-                    logger.info(f"Found Nest device: {device_info['name']} ({device_info['id']})")
-            
-            return devices
-        except Exception as e:
-            logger.error(f"Error getting Nest devices: {e}")
-            raise
+        homegraph_response = self._auth.get_homegraph()
+        devices = []
+        
+        for device in homegraph_response.home.devices:
+            if "action.devices.traits.CameraStream" in device.traits and "Nest" in device.hardware.model:
+                devices.append({
+                    'id': device.device_info.agent_info.unique_id,
+                    'name': device.device_name
+                })
+        
+        return devices
