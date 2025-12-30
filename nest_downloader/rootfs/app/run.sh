@@ -26,4 +26,4 @@ bashio::log.info "Refresh interval: ${REFRESH_INTERVAL} minutes"
 
 # Start Python application
 bashio::log.info "Starting Python application..."
-python3 main.py
+python main.py
