@@ -26,4 +26,10 @@ bashio::log.info "Refresh interval: ${REFRESH_INTERVAL} minutes"
 
 # Start Python application
 bashio::log.info "Starting Python application..."
-python main.py
+cd /app || bashio::exit.nok "Failed to change to /app directory"
+
+# Set PYTHONUNBUFFERED for immediate output
+export PYTHONUNBUFFERED=1
+
+# Run the application directly
+exec python3 main.py
