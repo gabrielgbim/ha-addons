@@ -7,31 +7,23 @@
 bashio::log.info "Starting Nest Video Downloader..."
 
 # Get configuration
-NEST_EMAIL=$(bashio::config 'nest_email')
-NEST_PASSWORD=$(bashio::config 'nest_password')
-DOWNLOAD_PATH=$(bashio::config 'download_path')
+export BASE_PATH=$(bashio::config 'BASE_PATH')
+export GOOGLE_USERNAME=$(bashio::config 'GOOGLE_USERNAME')
+export GOOGLE_MASTER_TOKEN=$(bashio::config 'GOOGLE_MASTER_TOKEN')
+export LOCAL_TIMEZONE=$(bashio::config 'LOCAL_TIMEZONE')
+export REFRESH_INTERVAL=$(bashio::config 'REFRESH_INTERVAL')
 
-# Validate credentials are provided
-if [[ -z "${NEST_EMAIL}" ]] || [[ -z "${NEST_PASSWORD}" ]]; then
-    bashio::log.error "Nest email and password must be configured"
+# Validate required configuration
+if [[ -z "${GOOGLE_USERNAME}" ]] || [[ -z "${GOOGLE_MASTER_TOKEN}" ]]; then
+    bashio::log.error "Google username and master token must be configured"
     bashio::exit.nok "Missing required configuration"
 fi
 
 bashio::log.info "Configuration loaded successfully"
-bashio::log.info "Download path: ${DOWNLOAD_PATH}"
+bashio::log.info "Base path: ${BASE_PATH}"
+bashio::log.info "Local timezone: ${LOCAL_TIMEZONE}"
+bashio::log.info "Refresh interval: ${REFRESH_INTERVAL} minutes"
 
-# Create download directory if it doesn't exist
-mkdir -p "${DOWNLOAD_PATH}"
-
-bashio::log.info "Nest Video Downloader is ready"
-
-# TODO: Implement actual Nest API integration
-# This should include:
-# - Authentication with Nest API using provided credentials
-# - Discovery of connected cameras
-# - Periodic checking for new videos
-# - Downloading videos to the specified path
-# Currently placeholder code to keep container running
-while true; do
-    sleep 3600
-done
+# Start Python application
+bashio::log.info "Starting Python application..."
+python3 main.py
