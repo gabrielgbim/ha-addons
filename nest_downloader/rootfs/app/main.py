@@ -8,11 +8,14 @@ import os
 import sys
 import logging
 import time
+from auth import GoogleAuthenticator
+from nest_device import NestDevice
+from downloader import VideoDownloader
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 
@@ -26,8 +29,16 @@ class Config:
         self.base_path = os.getenv('BASE_PATH')
         self.google_username = os.getenv('GOOGLE_USERNAME')
         self.google_master_token = os.getenv('GOOGLE_MASTER_TOKEN')
-        self.local_timezone = os.getenv('LOCAL_TIMEZONE')
-        self.refresh_interval = int(os.getenv('REFRESH_INTERVAL'))
+        self.local_timezone = os.getenv('LOCAL_TIMEZONE', 'America/New_York')
+        self.refresh_interval = int(os.getenv('REFRESH_INTERVAL', 60))
+        
+        # Validate required configuration
+        if not self.base_path:
+            raise ValueError("BASE_PATH is required")
+        if not self.google_username:
+            raise ValueError("GOOGLE_USERNAME is required")
+        if not self.google_master_token:
+            raise ValueError("GOOGLE_MASTER_TOKEN is required")
     
     def display(self):
         """Display configuration (without sensitive data)"""
@@ -43,7 +54,49 @@ class NestDownloader:
     
     def __init__(self, config):
         self.config = config
+        logger.info("Initializing Nest Video Downloader...")
+        
+        # Initialize authenticator
+        self.authenticator = GoogleAuthenticator(
+            username=config.google_username,
+            master_token=config.google_master_token
+        )
+        
+        # Get Nest devices
+        logger.info("Discovering Nest devices...")
+        device_list = self.authenticator.get_nest_devices()
+        
+        if not device_list:
+            logger.warning("No Nest devices found!")
+            self.devices = []
+        else:
+            self.devices = [
+                NestDevice(dev['id'], dev['name'], self.authenticator)
+                for dev in device_list
+            ]
+            logger.info(f"Found {len(self.devices)} Nest device(s)")
+        
+        # Initialize video downloader
+        self.downloader = VideoDownloader(
+            base_path=config.base_path,
+            local_timezone=config.local_timezone
+        )
+        
         logger.info("Nest Video Downloader initialized")
+    
+    def sync_all_devices(self):
+        """Sync videos from all devices"""
+        if not self.devices:
+            logger.warning("No devices to sync")
+            return
+        
+        logger.info("Starting sync for all devices...")
+        for device in self.devices:
+            try:
+                self.downloader.sync_device(device)
+            except Exception as e:
+                logger.error(f"Error syncing device {device.device_name}: {e}", exc_info=True)
+        logger.info("Sync completed")
     
     def run(self):
         """Main application loop"""
@@ -51,11 +104,7 @@ class NestDownloader:
         
         while True:
             try:
-                logger.info("Checking for new videos...")
-                # TODO: Implement Nest API integration
-                # - Authenticate with Google/Nest
-                # - Get list of cameras
-                # - Download new videos to base_path
+                self.sync_all_devices()
                 
                 # Sleep for the configured interval
                 sleep_seconds = self.config.refresh_interval * 60
@@ -76,7 +125,7 @@ def main():
     logger.info("=== Nest Video Downloader Starting ===")
     
     try:
-        # Load and validate configuration
+        # Load configuration
         config = Config()
         
         logger.info("Configuration loaded:")

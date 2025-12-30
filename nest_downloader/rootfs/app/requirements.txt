@@ -1,8 +1,6 @@
 # Python dependencies for Nest Video Downloader
-# TODO: Add actual Nest API libraries once implementation begins
-# Potential libraries to consider:
-# - google-nest-sdm: Official Google Nest Smart Device Management SDK
-# - oauth2client or google-auth: For authentication
-# - aiohttp: For async HTTP requests
-# This is a placeholder for initial setup
 requests>=2.31.0
+pydantic>=2.0.0
+glocaltokens>=0.7.0
+pytz>=2023.0
+isodate>=0.6.0
