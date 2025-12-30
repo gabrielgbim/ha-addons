@@ -8,6 +8,10 @@ import os
 import sys
 import logging
 import time
+
+# Print to stdout immediately before any other setup
+print("=== MAIN.PY STARTING ===", flush=True)
+
 from auth import GoogleAuthenticator
 from nest_device import NestDevice
 from downloader import VideoDownloader
@@ -20,6 +24,7 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+logger.info("Logger initialized")
 
 
 class Config:

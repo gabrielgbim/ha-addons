@@ -67,4 +67,14 @@ except Exception as e:
 
 # Run the application with stderr also unbuffered
 bashio::log.info "Executing main.py..."
-exec python3 -u main.py 2>&1
+
+# Test if main.py even starts
+bashio::log.info "Testing main.py execution..."
+python3 -u -c "
+import sys
+sys.path.insert(0, '/app')
+print('About to run main.py...', flush=True)
+exec(open('/app/main.py').read())
+" 2>&1
+
+bashio::log.info "main.py exited"
