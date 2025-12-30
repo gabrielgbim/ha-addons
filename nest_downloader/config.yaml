@@ -1,5 +1,5 @@
 name: Nest Video Downloader
-version: "0.2.11"
+version: "0.2.12"
 slug: nest_downloader
 description: Download videos from Nest cameras
 url: https://github.com/gabrielgbim/ha-addons/tree/main/nest_downloader
@@ -20,3 +20,6 @@ schema:
   LOCAL_TIMEZONE: str
   REFRESH_INTERVAL: int
 image: ghcr.io/gabrielgbim/nest-downloader-{arch}
+map:
+  - type: media
+    read_only: False
