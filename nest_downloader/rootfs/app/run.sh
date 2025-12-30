@@ -27,4 +27,22 @@ bashio::log.info "Refresh interval: ${REFRESH_INTERVAL} minutes"
 # Start Python application
 bashio::log.info "Starting Python application..."
 cd /app || bashio::exit.nok "Failed to change to /app directory"
-python3 -u main.py || bashio::exit.nok "Python application failed"
+
+# Check if main.py exists
+if [ ! -f "main.py" ]; then
+    bashio::exit.nok "main.py not found in /app directory"
+fi
+
+# Check Python version
+bashio::log.info "Python version: $(python3 --version)"
+
+# List files for debugging
+bashio::log.info "Files in /app: $(ls -la /app)"
+
+# Try to import modules first to catch import errors
+bashio::log.info "Testing Python imports..."
+python3 -u -c "import sys; print('Python import test'); sys.stdout.flush()" 2>&1
+
+# Run the application with stderr also unbuffered
+bashio::log.info "Executing main.py..."
+exec python3 -u main.py 2>&1
