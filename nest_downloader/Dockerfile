@@ -7,4 +7,6 @@ COPY rootfs /
 # Install Python packages
 RUN pip install -r /app/requirements.txt
 
-CMD [ "/run.sh" ]
+WORKDIR /app
+
+CMD [ "/app/run.sh" ]
