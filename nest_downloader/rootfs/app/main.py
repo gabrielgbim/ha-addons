@@ -12,9 +12,19 @@ import time
 # Print to stdout immediately before any other setup
 print("=== MAIN.PY STARTING ===", flush=True)
 
-from auth import GoogleAuthenticator
-from nest_device import NestDevice
-from downloader import VideoDownloader
+try:
+    print("Importing auth...", flush=True)
+    from auth import GoogleAuthenticator
+    print("Importing nest_device...", flush=True)
+    from nest_device import NestDevice
+    print("Importing downloader...", flush=True)
+    from downloader import VideoDownloader
+    print("All imports successful!", flush=True)
+except Exception as e:
+    print(f"IMPORT ERROR: {e}", flush=True)
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
 
 # Configure logging
 logging.basicConfig(
