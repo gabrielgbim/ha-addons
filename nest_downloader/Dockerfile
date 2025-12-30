@@ -14,4 +14,7 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 COPY run.sh /
 RUN chmod a+x /run.sh
 
+# Copy root filesystem
+COPY rootfs /
+
 CMD [ "/run.sh" ]
