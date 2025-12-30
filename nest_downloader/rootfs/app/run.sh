@@ -43,6 +43,28 @@ bashio::log.info "Files in /app: $(ls -la /app)"
 bashio::log.info "Testing Python imports..."
 python3 -u -c "import sys; print('Python import test'); sys.stdout.flush()" 2>&1
 
+# Test if we can import the main modules
+bashio::log.info "Testing main.py imports..."
+python3 -u -c "
+import sys
+sys.path.insert(0, '/app')
+try:
+    print('Testing auth...', flush=True)
+    import auth
+    print('Testing models...', flush=True)
+    import models
+    print('Testing nest_device...', flush=True)
+    import nest_device
+    print('Testing downloader...', flush=True)
+    import downloader
+    print('All imports successful!', flush=True)
+except Exception as e:
+    print(f'Import error: {e}', flush=True)
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
+" 2>&1
+
 # Run the application with stderr also unbuffered
 bashio::log.info "Executing main.py..."
 exec python3 -u main.py 2>&1
