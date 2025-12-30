@@ -8,11 +8,15 @@ arch:
   - amd64
 init: false
 options:
-  nest_email: ""
-  nest_password: ""
-  download_path: "/media"
+  BASE_PATH: "/media"
+  GOOGLE_USERNAME: ""
+  GOOGLE_MASTER_TOKEN: ""
+  LOCAL_TIMEZONE: "America/New_York"
+  REFRESH_INTERVAL: 10
 schema:
-  nest_email: str
-  nest_password: password
-  download_path: str
+  BASE_PATH: str
+  GOOGLE_USERNAME: email
+  GOOGLE_MASTER_TOKEN: password
+  LOCAL_TIMEZONE: str
+  REFRESH_INTERVAL: int
 image: ghcr.io/gabrielgbim/nest-downloader-{arch}
