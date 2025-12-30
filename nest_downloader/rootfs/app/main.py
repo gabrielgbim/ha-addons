@@ -27,6 +27,7 @@ except Exception as e:
     sys.exit(1)
 
 # Configure logging
+print("Configuring logging...", flush=True)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -34,7 +35,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+print("Logger configured, testing logger...", flush=True)
 logger.info("Logger initialized")
+print("After logger test", flush=True)
 
 
 class Config:
@@ -159,4 +162,6 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Calling main()...", flush=True)
     main()
+    print("main() completed", flush=True)
