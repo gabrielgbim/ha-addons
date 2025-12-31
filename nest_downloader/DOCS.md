@@ -2,51 +2,163 @@
 
 ## About
 
-The Nest Video Downloader add-on enables you to automatically download video recordings from your Nest cameras to your Home Assistant instance.
+The Nest Video Downloader add-on automatically downloads video recordings from your Nest cameras to your Home Assistant instance. It uses Google authentication via master token to access your Nest devices and organizes videos by camera, date, and time.
+
+## How It Works
+
+The add-on:
+1. Authenticates with Google using your master token
+2. Discovers all Nest cameras on your account
+3. Checks for new video events every X minutes (configurable)
+4. Downloads videos that haven't been downloaded yet
+5. Organizes them in a structured folder hierarchy
 
 ## Configuration
 
-### Option: `nest_email`
+### Option: `GOOGLE_USERNAME`
 
-Your Nest account email address. This is required to authenticate with the Nest API.
+Your Google account email address used with your Nest cameras.
 
-**Required**: Yes
+**Required**: Yes  
+**Type**: Email
 
-### Option: `nest_password`
+### Option: `GOOGLE_MASTER_TOKEN`
 
-Your Nest account password. This is required to authenticate with the Nest API.
+Your Google master token for authentication. This is obtained using the glocaltokens tool.
 
-**Required**: Yes
+**Required**: Yes  
+**Type**: Password (sensitive)
 
-### Option: `download_path`
+### Option: `BASE_PATH`
 
-The path where downloaded videos will be stored. By default, videos are saved to `/share/nest_videos`.
+The base directory where downloaded videos will be stored. Videos will be organized within this path by camera name and date.
 
 **Required**: No  
-**Default**: `/share/nest_videos`
+**Default**: `/media`  
+**Example**: `/media` will create `/media/Front Door Camera/2024/12/30/...`
+
+### Option: `LOCAL_TIMEZONE`
+
+The timezone used for organizing video files and timestamps. Videos are organized using this timezone for the folder structure.
+
+**Required**: No  
+**Default**: `America/New_York`  
+**Example**: `America/Los_Angeles`, `Europe/London`, `Asia/Tokyo`
+
+### Option: `REFRESH_INTERVAL`
+
+The number of minutes to wait between checking for new videos.
+
+**Required**: No  
+**Default**: `10`  
+**Type**: Integer (minutes)
+**Recommendation**: Use 10-60 minutes depending on your needs
+
+## Getting Your Google Master Token
+
+You need to obtain a Google master token to authenticate with Nest services:
+
+1. Install the glocaltokens Python package:
+   ```bash
+   pip install glocaltokens
+   ```
+
+2. Run the master token retrieval tool:
+   ```bash
+   python -m glocaltokens get-master-token
+   ```
+
+3. Follow the prompts to authenticate with your Google account
+
+4. Copy the master token and paste it into the add-on configuration
+
+**Note**: Keep your master token secure - it provides access to your Google/Nest account.
+
+## Video Organization
+
+Videos are automatically organized in the following structure:
+
+```
+/media/
+  └── [Camera Name]/
+      └── [Year]/
+          └── [Month]/
+              └── [Day]/
+                  └── YYYY-MM-DD_HH-MM-SS_[duration].mp4
+```
+
+**Example**:
+```
+/media/
+  └── Front Door Camera/
+      └── 2024/
+          └── 12/
+              └── 30/
+                  └── 2024-12-30_14-23-45_30s000ms.mp4
+                  └── 2024-12-30_18-45-12_45s250ms.mp4
+```
 
 ## Usage
 
-1. Configure your Nest account credentials in the add-on configuration
-2. Start the add-on
-3. Videos will be automatically downloaded to the specified path
-4. Access your videos through the Home Assistant file browser or media folder
+1. Configure your Google username and master token in the add-on configuration
+2. Set your preferred timezone and refresh interval
+3. Start the add-on
+4. Monitor the logs to see video discovery and downloads
+5. Access your videos through the Home Assistant Media Browser or directly via the file system
+
+## Logs
+
+The add-on provides detailed logging:
+- Device discovery
+- Number of events found
+- Download progress
+- Skipped videos (already downloaded)
+- Any errors encountered
+
+## Video Retention
+
+The add-on downloads videos from approximately the last 4 hours (3 hours for free Nest Aware + 1 hour buffer). Videos are checked during each refresh interval, and only new videos are downloaded.
 
 ## Troubleshooting
 
 ### Authentication Issues
 
 If you experience authentication issues:
-- Verify your Nest account credentials are correct
-- Ensure your Nest account has access to the cameras
+- Verify your Google username (email) is correct
+- Ensure your master token is valid and hasn't expired
+- Try regenerating your master token using glocaltokens
 - Check the add-on logs for detailed error messages
+
+### No Devices Found
+
+If no Nest cameras are discovered:
+- Verify your cameras are properly set up in the Google Home app
+- Ensure your account has access to the cameras
+- Check that your cameras are Nest-branded devices
+- Review the add-on logs for connection errors
+
+### Videos Not Downloading
+
+If videos are not being downloaded:
+- Check that the BASE_PATH is accessible and writable
+- Verify you have sufficient disk space
+- Ensure your cameras have recorded events
+- Check the logs for download errors
+- Note: Only events from the last ~4 hours are available
 
 ### Storage Issues
 
-If videos are not being saved:
-- Verify the download path exists and is writable
-- Check available disk space
-- Review the add-on logs for permission errors
+If you encounter storage problems:
+- Monitor your available disk space
+- Consider increasing your refresh interval to reduce download frequency
+- Set up automated cleanup of old videos if needed
+
+## Performance
+
+- The add-on runs continuously, checking for new videos at your configured interval
+- Already downloaded videos are skipped automatically
+- CPU and memory usage is minimal when idle
+- Network usage depends on the number and size of videos being downloaded
 
 ## Support
 
