@@ -51,6 +51,16 @@ Videos are organized in the following structure:
                   └── YYYY-MM-DD_HH-MM-SS_[duration].mp4
 ```
 
+## Credits
+
+This add-on was developed based on the excellent work of:
+
+- [NestVideoBackup](https://github.com/KaitoKid/NestVideoBackup) by KaitoKid
+- [google-nest-telegram-sync](https://github.com/TamirMa/google-nest-telegram-sync) by TamirMa
+- [Google Nest Camera Internal API](https://medium.com/@tamirmayer/google-nest-camera-internal-api-fdf9dc3ce167) article by Tamir Mayer
+
+Special thanks to these developers for documenting the Nest API and providing reference implementations.
+
 ## Support
 
 For issues and feature requests, please use the [GitHub repository](https://github.com/gabrielgbim/ha-addons).
