@@ -23,14 +23,15 @@ The add-on requires the following configuration:
 
 ## Getting Your Google Master Token
 
-To obtain your Google master token, use the [glocaltokens](https://github.com/leikoilar/glocaltokens) tool:
+You can obtain your Google master token using Docker:
 
 ```bash
-pip install glocaltokens
-python -m glocaltokens get-master-token
+docker run --rm -it breph/ha-google-home_get-token
 ```
 
-Follow the prompts to authenticate and retrieve your master token.
+Follow the prompts and enter your Google credentials. You can use an app password generated from [Google App Passwords](https://myaccount.google.com/apppasswords) - make sure you've generated it on the right Google account linked to your Nest cameras.
+
+Save the master token securely - you'll use it in the add-on configuration.
 
 ## Installation
 

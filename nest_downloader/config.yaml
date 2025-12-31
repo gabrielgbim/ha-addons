@@ -1,5 +1,5 @@
 name: Nest Video Downloader
-version: "1.0.0"
+version: "1.0.1"
 slug: nest_downloader
 description: Download videos from Nest cameras
 url: https://github.com/gabrielgbim/ha-addons/tree/main/nest_downloader

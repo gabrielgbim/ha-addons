@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2025-12-30
+
+### Improved
+- Simplified master token generation instructions using Docker command
+- Updated documentation with easier-to-follow setup guide
+
 ## [1.0.0] - 2025-12-30
 
 ### Added

@@ -56,23 +56,22 @@ The number of minutes to wait between checking for new videos.
 
 ## Getting Your Google Master Token
 
-You need to obtain a Google master token to authenticate with Nest services:
+You need to obtain a Google master token to authenticate with Nest services.
 
-1. Install the glocaltokens Python package:
-   ```bash
-   pip install glocaltokens
-   ```
+The easiest way to get your master token is using Docker:
 
-2. Run the master token retrieval tool:
-   ```bash
-   python -m glocaltokens get-master-token
-   ```
+```bash
+docker run --rm -it breph/ha-google-home_get-token
+```
 
-3. Follow the prompts to authenticate with your Google account
+Follow the interactive prompts:
+1. Enter your Google account email
+2. Enter your password (or app password)
+3. The tool will display your master token
 
-4. Copy the master token and paste it into the add-on configuration
+**Tip**: You can generate an app password from [Google App Passwords](https://myaccount.google.com/apppasswords) for added security. Make sure you're using the Google account that has access to your Nest cameras.
 
-**Note**: Keep your master token secure - it provides access to your Google/Nest account.
+**Important**: Keep your master token secure - it provides access to your Google/Nest account.
 
 ## Video Organization
 
